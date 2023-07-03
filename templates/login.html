@@ -1,6 +1,8 @@
 <html>
   <head>
     <title>Login</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -111,6 +113,23 @@
 
       .signup-link a:hover {
         color: #4caf50;
+      }
+
+      .add-button {
+        position: fixed;  /* Keep the button fixed at the same position */
+        top: 10px;        /* Set the distance from the top of the page */
+        right: 10px;      /* Set the distance from the right side of the page */
+        padding: 10px;    /* Add some padding to the button */
+        background-color: #4caf50;  /* Set a background color */
+        color: white;     /* Set the text color to white */
+        border: none;     /* Remove the default border */
+        border-radius: 5px; /* Round the corners */
+        cursor: pointer;  /* Change the cursor when hovered */
+        transition: background-color 0.3s;  /* Add transition to background color */
+      }
+
+      .add-button:hover {
+        background-color: #45a049;  /* Change the background color when hovered */
       }
     </style>
     <link rel="manifest" href="../static/manifest.json" />
