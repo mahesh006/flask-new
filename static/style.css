@@ -361,7 +361,7 @@ a {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: 30px;
+  font-size: 40px;
   color: #007b9a;
   z-index: 1000;
 }
