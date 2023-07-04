@@ -68,11 +68,11 @@ def home():
 
 
 
+from datetime import datetime
 
 @app.route('/upload', methods=['POST'])
 def handle_data():
     data = request.get_json()
-    
 
     # Get the file name and image base64 strings from the received data
     file_name = data.get('fileName')
@@ -80,7 +80,8 @@ def handle_data():
 
     # Create a directory to store the images
     dir_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
-    os.makedirs(dir_path, exist_ok=True)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
 
     # For each base64 string, decode it into an image and save it to the directory
     for i, image_base64 in enumerate(image_base64s):
@@ -88,24 +89,28 @@ def handle_data():
         prefix, image_base64 = image_base64.split(";base64,")
         img_data = base64.b64decode(image_base64)
 
+        # Get the current timestamp and use it as the file name
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S%f')
+
         # Save the image locally
-        local_file_path = os.path.join(dir_path, f'image_{i}.png')
+        local_file_path = os.path.join(dir_path, f'image_{timestamp}.png')
         with open(local_file_path, 'wb') as f:
             f.write(img_data)
 
         # Upload the local file to Firebase Storage
-        file_path = f"{file_name}/image_{i}.png"
+        file_path = f"{file_name}/image_{timestamp}.png"
         storage.child("{}/{}".format(session['email'], file_path)).put(local_file_path)
 
         # Get the download url and save it to Firestore
         url = storage.child("{}/{}".format(session['email'], file_path)).get_url(None)
-        data = {"email": session['email'], "folder_name": file_name, "file_name": f"image_{i}.png", "url": url}
+        data = {"email": session['email'], "folder_name": file_name, "file_name": f"image_{timestamp}.png", "url": url}
         db.child("user_files").push(data)
 
         # Remove the local file
         os.remove(local_file_path)
 
     return jsonify({'message': 'Uploaded Successfully!'})
+
 
 
 
